@@ -9,15 +9,27 @@ def main():
         mole_image = pygame.image.load("mole.png")
         screen = pygame.display.set_mode((640, 512))
         clock = pygame.time.Clock()
-
+        mx = 0
+        my = 0
 
         running = True
         while running:
-            for event in pygame.event.get(): #Collecting each event that occurs
-                if event.type == pygame.QUIT:
+            for event in pygame.event.get(): #Noting each event that occurs
+
+                if event.type == pygame.QUIT: #Close window
                     running = False
+
+                elif event.type == pygame.MOUSEBUTTONDOWN: #Click on grid
+                    x, y = event.pos  #mouse coordinates
+                    
+                    if (mx <= x <= mx + 32) and (my - 32 <= y <= my + 32):
+                        xmult = random.randrange(0, 20)
+                        ymult = random.randrange(0, 16)
+                        mx = 32 * xmult
+                        my = 32 * ymult
+
+
             screen.fill("light green") #background color, pre-defined
-            screen.blit(mole_image, mole_image.get_rect(topleft=(0, 0)))
 
             #Drawing the grid
             for i in range(0, 20):  # vertical lines
@@ -25,13 +37,7 @@ def main():
             for i in range(16):  #horizontal lines
                 pygame.draw.line(screen, 'black', (0, i*32), (640, i*32))
 
-            #Click event:
-            mx, my = mole_image.pos #mole coordinates
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = event.pos #click coordinates
-                if (mx - 32 <= x <= mx + 32) and (mx - 32 <= y <= mx + 32):
-                    mx = random.randrange(0, 641)
-                    my = random.randrange(0, 513)
+            screen.blit(mole_image, mole_image.get_rect(topleft=(mx, my)))
             pygame.display.flip() #update screen with anything that was drawn/colored
             clock.tick(60)
     finally:
